@@ -1,0 +1,207 @@
+[gd_scene load_steps=21 format=2]
+
+[ext_resource path="res://Scripts/Level.gd" type="Script" id=1]
+[ext_resource path="res://Scenes/Player.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Assets/SPACE.png" type="Texture" id=3]
+[ext_resource path="res://Assets/VACUO.png" type="Texture" id=4]
+[ext_resource path="res://Scripts/timerkami.gd" type="Script" id=5]
+[ext_resource path="res://Scripts/timerfront.gd" type="Script" id=6]
+[ext_resource path="res://Scenes/Path_Kami.tscn" type="PackedScene" id=7]
+[ext_resource path="res://Scripts/Score.gd" type="Script" id=8]
+[ext_resource path="res://Assets/Fontes/operius-regular.ttf" type="DynamicFontData" id=9]
+[ext_resource path="res://Assets/HUD.png" type="Texture" id=10]
+[ext_resource path="res://Scenes/Camera2D.tscn" type="PackedScene" id=11]
+
+[sub_resource type="RectangleShape2D" id=3]
+extents = Vector2( 160, 15 )
+
+[sub_resource type="DynamicFont" id=4]
+size = 8
+font_data = ExtResource( 9 )
+
+[sub_resource type="DynamicFont" id=5]
+size = 8
+font_data = ExtResource( 9 )
+
+[sub_resource type="DynamicFont" id=6]
+size = 8
+font_data = ExtResource( 9 )
+
+[sub_resource type="DynamicFont" id=7]
+size = 7
+font_data = ExtResource( 9 )
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 160, 1 )
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 1, 120 )
+
+[sub_resource type="Shader" id=8]
+code = "shader_type canvas_item;
+
+uniform float speed = 0.4;
+
+void vertex() {
+	UV.y -= speed * TIME;
+	
+}"
+
+[sub_resource type="ShaderMaterial" id=9]
+shader = SubResource( 8 )
+shader_param/speed = 0.4
+
+[node name="Space" type="Node2D"]
+script = ExtResource( 1 )
+
+[node name="Camera2D" parent="." instance=ExtResource( 11 )]
+
+[node name="GUI" type="Control" parent="."]
+margin_right = 320.0
+margin_bottom = 240.0
+script = ExtResource( 8 )
+
+[node name="Barreira_Menu" type="StaticBody2D" parent="GUI" groups=["barreira"]]
+collision_layer = 128
+collision_mask = 2
+
+[node name="Sprite" type="Sprite" parent="GUI/Barreira_Menu"]
+position = Vector2( 160, 225 )
+texture = ExtResource( 10 )
+
+[node name="Colisão_BA" type="CollisionShape2D" parent="GUI/Barreira_Menu"]
+position = Vector2( 160, 225 )
+shape = SubResource( 3 )
+
+[node name="time" type="Label" parent="GUI"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_left = 112.0
+margin_top = -14.0
+margin_right = 152.0
+custom_fonts/font = SubResource( 4 )
+text = "00:00"
+
+[node name="Score" type="Label" parent="GUI"]
+margin_left = 160.0
+margin_top = 226.0
+margin_right = 169.0
+margin_bottom = 236.0
+custom_fonts/font = SubResource( 5 )
+text = "0"
+
+[node name="HighScore" type="Label" parent="GUI"]
+margin_left = 232.0
+margin_top = 226.0
+margin_right = 241.0
+margin_bottom = 236.0
+custom_fonts/font = SubResource( 6 )
+text = "0"
+
+[node name="SCORE_NAME" type="Label" parent="GUI"]
+margin_left = 160.0
+margin_top = 216.0
+margin_right = 203.0
+margin_bottom = 230.0
+custom_fonts/font = SubResource( 7 )
+text = "Score"
+
+[node name="TIME" type="Label" parent="GUI"]
+margin_left = 110.0
+margin_top = 216.0
+margin_right = 153.0
+margin_bottom = 230.0
+custom_fonts/font = SubResource( 7 )
+text = "TIME"
+align = 1
+
+[node name="HIGHSCORE" type="Label" parent="GUI"]
+margin_left = 232.0
+margin_top = 216.0
+margin_right = 275.0
+margin_bottom = 230.0
+custom_fonts/font = SubResource( 7 )
+text = "Highscore"
+
+[node name="Timer" type="Timer" parent="GUI"]
+autostart = true
+
+[node name="Player" parent="." instance=ExtResource( 2 )]
+position = Vector2( 160, 168 )
+collision_layer = 2
+collision_mask = 133
+
+[node name="paredes" type="Node2D" parent="."]
+
+[node name="parede1" type="StaticBody2D" parent="paredes" groups=["Wall"]]
+position = Vector2( 160, -1 )
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="paredes/parede1"]
+shape = SubResource( 1 )
+
+[node name="parede2" type="StaticBody2D" parent="paredes" groups=["End", "Wall"]]
+position = Vector2( 160, 240 )
+collision_mask = 6
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="paredes/parede2"]
+shape = SubResource( 1 )
+
+[node name="parede3" type="StaticBody2D" parent="paredes" groups=["Wall"]]
+position = Vector2( -1, 120 )
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="paredes/parede3"]
+shape = SubResource( 2 )
+
+[node name="parede4" type="StaticBody2D" parent="paredes" groups=["Wall"]]
+position = Vector2( 321, 120 )
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="paredes/parede4"]
+shape = SubResource( 2 )
+
+[node name="Space" type="Control" parent="."]
+show_behind_parent = true
+margin_right = 40.0
+margin_bottom = 40.0
+
+[node name="Stars1" type="TextureRect" parent="Space"]
+material = SubResource( 9 )
+margin_right = 40.0
+margin_bottom = 40.0
+texture = ExtResource( 3 )
+stretch_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="Space"]
+show_behind_parent = true
+margin_right = 40.0
+margin_bottom = 40.0
+texture = ExtResource( 4 )
+
+[node name="SpawnFront" type="Timer" parent="."]
+wait_time = 0.8
+autostart = true
+script = ExtResource( 6 )
+
+[node name="SpawnFront2" type="Timer" parent="."]
+wait_time = 0.8
+autostart = true
+script = ExtResource( 6 )
+
+[node name="SpawnBoss" type="Timer" parent="."]
+wait_time = 0.8
+one_shot = true
+
+[node name="SpawnKami" type="Timer" parent="."]
+wait_time = 0.3
+autostart = true
+script = ExtResource( 5 )
+
+[node name="Path_Kami" parent="." instance=ExtResource( 7 )]
+position = Vector2( 40, -136 )
+
+[connection signal="timeout" from="GUI/Timer" to="GUI" method="_on_Timer_timeout"]
+[connection signal="timeout" from="SpawnFront" to="." method="_on_SpawnFront_timeout"]
+[connection signal="timeout" from="SpawnFront2" to="." method="_on_SpawnFront_timeout"]
+[connection signal="timeout" from="SpawnKami" to="." method="_on_SpawnKami_timeout"]

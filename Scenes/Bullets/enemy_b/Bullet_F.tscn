@@ -1,0 +1,27 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://Scripts/Bullet_F.gd" type="Script" id=1]
+[ext_resource path="res://Assets/bullet_E-1.png" type="Texture" id=2]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 3, 3 )
+
+[node name="Bullet_F" type="Area2D" groups=["bullet_e"]]
+collision_layer = 32
+collision_mask = 130
+script = ExtResource( 1 )
+
+[node name="Sprite" type="Sprite" parent="."]
+light_mask = 0
+texture = ExtResource( 2 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 1 )
+
+[node name="Despawntimer" type="Timer" parent="."]
+wait_time = 10.0
+autostart = true
+
+[connection signal="area_entered" from="." to="." method="_on_Bullet_F_area_entered"]
+[connection signal="body_entered" from="." to="." method="_on_Bullet_F_body_entered"]
+[connection signal="timeout" from="Despawntimer" to="." method="_on_Despawntimer_timeout"]
